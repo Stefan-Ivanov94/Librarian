@@ -12,16 +12,16 @@ while command != "end":  #TODO: Make list of STOP commands
     if command == "add":
         title = input("Book title:")
         author = input("Author name:")
-        publisher = input("Publisher:")
-        year = int(input("Year of release:"))
         location = input("Location:")
-        
         book = title, author
-        if book in books:   #TODO: Move afte author is initiated to improve user expirience Consider adding prompts
+        if book in books:
             books[book][2].append(location)
         else:
             locations = [location]
+            publisher = input("Publisher:")
+            year = int(input("Year of release:"))
             books[book] = [publisher,year,locations]
+        print(f"A copy of {title} by {author} published by {publisher} in {year} was added in {location}.")
     elif command == "move":
         pass
     elif command == "remove":
@@ -38,20 +38,20 @@ while command != "end":  #TODO: Make list of STOP commands
             if len(books[book][2]) == 0:
                 del books[book]
     elif command == "search":
-        search_type = input("Search by author, by title or by both?")
-        if search_type.lower() == "author":
-            pass
-        elif search_type.lower() == "title":
-            pass
-        elif search_type.lower() == "both":
-            title = input("Book title:")
-            author = input("Author name:")
-            desired_book = title,author
-            for book in books: # Breaks after first find
-                if book == desired_book:
-                    print(book)
-        else:
-            print("Only \"author\", \"title\" or \"both\" are valid commands.")
+        print("If you want to search by author, leave title empty and vice versa.")
+        title = input("Book title:")
+        author = input("Author name:")
+        if len(title) == 0 and len(author) == 0:
+            print("You have to enter title and/or author!")
+            continue
+        for book, info in books.items():
+            #TODO: Fix locations' printing!!! And find a way to use a single print statement
+            if len(title) == 0 and book[1] == author:
+                print(f"{book[0]} by {book[1]} found in {locations}") 
+            elif len(author) == 0 and book[0] == title:
+                print(f"{book[0]} by {book[1]} found in {locations}") 
+            elif book == (title,author):
+                print(f"{book[0]} by {book[1]} found in {locations}")
     else:
         print("Invalid command!")
         

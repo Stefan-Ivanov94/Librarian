@@ -44,14 +44,16 @@ while command != "end":  #TODO: Make list of STOP commands
         if len(title) == 0 and len(author) == 0:
             print("You have to enter title and/or author!")
             continue
+        books_found = {}
         for book, info in books.items():
-            #TODO: Fix locations' printing!!! And find a way to use a single print statement
             if len(title) == 0 and book[1] == author:
-                print(f"{book[0]} by {book[1]} found in {locations}") 
+                books_found[book] = info
             elif len(author) == 0 and book[0] == title:
-                print(f"{book[0]} by {book[1]} found in {locations}") 
+                books_found[book] = info
             elif book == (title,author):
-                print(f"{book[0]} by {book[1]} found in {locations}")
+                books_found[book] = info
+        for book, info in books_found.items():
+            print(f"{book[0]} by {book[1]} found in {info[2]}") 
     else:
         print("Invalid command!")
         

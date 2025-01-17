@@ -72,7 +72,11 @@ while command != "end":  #TODO: Make list of STOP commands
             elif book == (title,author):
                 books_found[book] = info
         for book, info in books_found.items():
-            print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {info[2]}") 
+            print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {'; '.join(info[2])}.") 
+    elif command == "list all":
+        for book,_ in books.items():
+            print(f"{book[0]} by {book[1]}")
+        print(f"You have {len(books)} books in your library.")
     else:
         print("Invalid command!")
         

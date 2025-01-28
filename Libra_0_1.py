@@ -75,7 +75,7 @@ while command != "end":  #TODO: Make list of STOP commands
             print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {'; '.join(info[2])}.") 
     elif command == "list all":
         for book,_ in books.items():
-            print(f"{book[0]} by {book[1]}")
+            print(f"{book[0]} by {book[1]}") #TODO: Sum len(locations) to get actual number of books
         print(f"You have {len(books)} books in your library.")
     else:
         print("Invalid command!")

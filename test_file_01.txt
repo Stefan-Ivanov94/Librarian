@@ -1,2 +1,2 @@
-Kudjo+King|Bard,1989,gore
-The Talisman+King|Bard,1986,Gore+dolu
+Kudjo|King|Bard|1986|gore+dolu
+The Talisman|King|Bard|1989|gore lqvo

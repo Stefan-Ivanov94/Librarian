@@ -5,8 +5,18 @@ Created on Thu Dec 19 14:08:20 2024
 @author: Stefan
 """
 
-books = {}      #TODO: Add file reader
+books = {} 
 main_prompt = "Do you want to: add, move, remove, search or list all book? "
+
+with open('test_file_01.txt', 'r') as books_list:
+    for raw_book in books_list:
+        raw_book = raw_book.strip().split('|')
+        book_key = raw_book[0], raw_book[1]
+        locations = raw_book[4].split('+')
+        book_info = [raw_book[2], int(raw_book[3]), locations]
+        books[book_key] = book_info
+    print(f"A total of {len(books)} books have been loaded")
+
 command = input(main_prompt)
 
 while command != "end":  #TODO: Make list of STOP commands
@@ -74,10 +84,18 @@ while command != "end":  #TODO: Make list of STOP commands
         for book, info in books_found.items():
             print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {'; '.join(info[2])}.") 
     elif command == "list all":
-        for book,_ in books.items():
-            print(f"{book[0]} by {book[1]}") #TODO: Sum len(locations) to get actual number of books
-        print(f"You have {len(books)} books in your library.")
+        number_of_books = 0
+        for book,info in books.items():
+            number_of_books += len(info[2])
+            print(f"{book[0]} by {book[1]} ({len(info[2])})") 
+        print(f"You have {number_of_books} books of wich {len(books)} are unique.")
     else:
         print("Invalid command!")
         
     command = input(main_prompt)
+
+with open('test_file_01.txt','w') as books_list:
+    for book, info in books.items():
+        book_as_list = [book[0], book[1], info[0], str(info[1]), '+'.join(info[2])]
+        book_as_string = '|'.join(book_as_list) + '\n'
+        books_list.write(book_as_string)

@@ -17,5 +17,7 @@ while command != "end":
 
 with open('test_file_01.txt','w') as books_list:
     for book, info in books.items():
-        book_as_string = f"{book[0]}+{book[1]}|{info[0]},{info[1]},{'+'.join(info[2])}\n" 
+        book_as_list = [book[0], book[1], info[0], str(info[1]), '+'.join(info[2])]
+        book_as_string = '|'.join(book_as_list) + '\n'
         books_list.write(book_as_string)
+    

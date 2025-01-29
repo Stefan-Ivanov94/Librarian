@@ -85,7 +85,7 @@ while command != "end":  #TODO: Make list of STOP commands
                 books_found[book] = info
         for book, info in books_found.items():
             print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {'; '.join(info[2])}.") 
-        else:
+        if len(books_found) == 0:
             print(not_found)
     elif command == "list all":
         list_type = input("Simple(title, author and number of copies) or detailed list? ")

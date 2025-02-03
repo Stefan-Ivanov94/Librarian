@@ -6,7 +6,17 @@
 #    print(f"Returned {nothing}")
 #else:
 #    print(nothing)
-test_dict = {('a',1):2 ,('b',2):7, ('c',3):-3}
-nothing = None
-test_dict[nothing] = 42
-print(test_dict)
+#def read_book()->tuple:
+#    title = input("Book title:")
+#    author = input("Author name:")
+#    if title or author:
+#        book = title, author
+#        return book
+#    else:
+#        print("You must enter title and/or author!")
+#        return read_book()
+#    
+#bok = read_book()
+#print(bool(bok[0]))
+list = []
+print(bool(list))

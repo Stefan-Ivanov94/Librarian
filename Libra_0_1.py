@@ -25,14 +25,26 @@ def read_file(file_name:str)->dict:
         print(f"A total of {len(books)} unique books have been loaded")
     return books
 
-def read_book()->tuple:
+def read_book_key()->tuple:
     title = input("Book title:")
     author = input("Author name:")
     if title or author:
         book = title, author
         return book
     else:
-        print()
+        print("You have to enter title and/or author!")
+        return read_book_key()
+    
+def validate_title_and_author(book_key:tuple)->tuple:
+    if not book_key[0]:
+        valid_title = input("You have to enter book title! ")
+        return (valid_title,book_key[1])
+    elif not book_key[1]:
+        valid_author = input("You have to enter author name! ")
+        return (book_key[0],valid_author)
+    else:
+        return book_key
+    
 def add_book(book_key:tuple,book_location:str,books_data:dict)->dict:
     if book_key in books_data:
         books_data[book_key][2].append(book_location)
@@ -45,56 +57,51 @@ def add_book(book_key:tuple,book_location:str,books_data:dict)->dict:
          in {year} was added in {book_location}.")
     return books_data
 
+def move_book(book_key:tuple,books_data:dict,start_location:str,end_location:str)->dict:
+    if start_location in books_data[book_key][2]:
+        books_data[book_key][2].remove(start_location)
+        books_data[book_key][2].append(end_location)
+        print(f"Book succesfuly moved from {start_location} to {end_location}")
+    else:
+        print(bad_lacation)
+    return books_data
+
+def remove_book(book_key:tuple,books_data:dict,location:str)->dict:
+    if book_key in books_data:
+        books_data[book_key][2].remove(location)
+        if not books_data[book_key][2]:
+            del books[book]
+        print(f"{book[0]} by {book[1]} removed from {location}.")
+    else:
+        print(bad_lacation)
+    return books_data
+
 books = read_file('test_file_01.txt')
 command = input(main_prompt)
 
 while command != "end":  #TODO: Make list of STOP commands
     if command == "add":
-        title = input("Book title:")
-        author = input("Author name:")
+        book = validate_title_and_author(read_book_key())
         location = input("Location:")
-        book = title, author
         books = add_book(book,location,books)
     elif command == "move":
-        title = input("Book title:")
-        author = input("Author name:")
-        book = title, author
-        if book not in books:
-            print(not_found)
-            command = input(main_prompt)
-            continue
-        start_location = input("Location to move from:")
-        end_location = input("Location to move to:")
-        if start_location not in books[book][2]:
-            print(bad_lacation)
+        book = validate_title_and_author(read_book_key())
+        if book in books:
+            start_location = input("Location to move from:")
+            end_location = input("Location to move to:")
+            books = move_book(book,books,start_location,end_location)
         else:
-            books[book][2].remove(start_location)
-            books[book][2].append(end_location)
-            print(f"Book succesfuly moved from {start_location} to {end_location}")
+            print(not_found)       
     elif command == "remove":
-        title = input("Book title:")
-        author = input("Author name:")
-        book = title, author
-        if book not in books:
-            print(not_found)
-            command = input(main_prompt)
-            continue
-        location = input("Location to remove from:")
-        if location not in books[book][2]:
-            print(bad_lacation)
+        book = validate_title_and_author(read_book_key())
+        if book in books:
+            location = input("Location to remove from:")
+            books = remove_book(book,books,location)
         else:
-            books[book][2].remove(location)
-            if len(books[book][2]) == 0:
-                del books[book]
-            print(f"{book[0]} by {book[1]} removed from {location}.")
+            print(not_found)
     elif command == "search":
         print("If you want to search by author, leave title empty and vice versa.")
-        title = input("Book title:")
-        author = input("Author name:")
-        if len(title) == 0 and len(author) == 0:
-            print("You have to enter title and/or author!")
-            command = input(main_prompt)
-            continue
+        book_to_find = read_book_key()
         books_found = {}
         for book, info in books.items():
             if len(title) == 0 and book[1] == author:

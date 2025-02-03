@@ -5,20 +5,47 @@ Created on Thu Dec 19 14:08:20 2024
 @author: Stefan
 """
 
+#Dictionary to store books data
 books = {} 
+#commonly used prompts
 main_prompt = "Do you want to: add, move, remove, search or list all book? "
 not_found = "Book not found. Chech title and author spelling!"
 bad_lacation = "Book not found in specified location."
 
-with open('test_file_01.txt', 'r') as books_list:
-    for raw_book in books_list:
-        raw_book = raw_book.strip().split('|')
-        book_key = raw_book[0], raw_book[1]
-        locations = raw_book[4].split('+')
-        book_info = [raw_book[2], int(raw_book[3]), locations]
-        books[book_key] = book_info
-    print(f"A total of {len(books)} books have been loaded")
+def read_file(file_name:str)->dict:
+    #TODO: Add docstring
+    books = {}
+    with open(file_name, 'r') as books_list:
+        for raw_book in books_list:
+            raw_book = raw_book.strip().split('|')
+            book_key = raw_book[0], raw_book[1]
+            locations = raw_book[4].split('+')
+            book_info = [raw_book[2], int(raw_book[3]), locations]
+            books[book_key] = book_info
+        print(f"A total of {len(books)} unique books have been loaded")
+    return books
 
+def read_book()->tuple:
+    title = input("Book title:")
+    author = input("Author name:")
+    if title or author:
+        book = title, author
+        return book
+    else:
+        print()
+def add_book(book_key:tuple,book_location:str,books_data:dict)->dict:
+    if book_key in books_data:
+        books_data[book_key][2].append(book_location)
+    else:
+        publisher = input("Publisher:")
+        year = int(input("Year of release:"))
+        locations = [book_location]
+        books_data[book_key] = [publisher,year,locations]
+    print(f"A copy of {book_key[0]} by {book_key[1]} published by {publisher}\
+         in {year} was added in {book_location}.")
+    return books_data
+
+books = read_file('test_file_01.txt')
 command = input(main_prompt)
 
 while command != "end":  #TODO: Make list of STOP commands
@@ -27,14 +54,7 @@ while command != "end":  #TODO: Make list of STOP commands
         author = input("Author name:")
         location = input("Location:")
         book = title, author
-        if book in books:
-            books[book][2].append(location)
-        else:
-            locations = [location]
-            publisher = input("Publisher:")
-            year = int(input("Year of release:"))
-            books[book] = [publisher,year,locations]
-        print(f"A copy of {title} by {author} published by {publisher} in {year} was added in {location}.")
+        books = add_book(book,location,books)
     elif command == "move":
         title = input("Book title:")
         author = input("Author name:")

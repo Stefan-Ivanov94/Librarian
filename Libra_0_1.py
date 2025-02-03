@@ -76,6 +76,30 @@ def remove_book(book_key:tuple,books_data:dict,location:str)->dict:
         print(bad_lacation)
     return books_data
 
+def print_all(books_data:dict):
+    list_type = input("Simple(title, author and number of copies) or detailed list? ")
+    number_of_books = 0
+    if list_type != "simple" and list_type != "detailed":
+        print("Only 'simple' and 'detailed' commands accepted.")
+        print_all(books_data)
+    elif books_data:
+        for book,info in books_data.items():
+            number_of_books += len(info[2])
+            if list_type == "simple":
+                print(f"{book[0]} by {book[1]} ({len(info[2])})") 
+            elif list_type == "detailed":
+                print(f"{book[0]} by {book[1]} Publisher: {info[0]} Year: {info[1]} Found in: {', '.join(info[2])}") 
+        print(f"You have {number_of_books} books of wich {len(books_data)} are unique.")
+    else:
+        print("No books found.")
+
+def find_book(books_data:dict,book_to_find:tuple):
+    books_found = {}
+    for book_key, book_info in books_data.items():
+        if (book_to_find[0] == book_key[0]) or (book_to_find[1] == book_key[1]):
+            books_found[book_key] = book_info
+    print_all(books_found)
+
 books = read_file('test_file_01.txt')
 command = input(main_prompt)
 
@@ -101,35 +125,9 @@ while command != "end":  #TODO: Make list of STOP commands
             print(not_found)
     elif command == "search":
         print("If you want to search by author, leave title empty and vice versa.")
-        book_to_find = read_book_key()
-        books_found = {}
-        for book, info in books.items():
-            if len(title) == 0 and book[1] == author:
-                books_found[book] = info
-            elif len(author) == 0 and book[0] == title:
-                books_found[book] = info
-            elif book == (title,author):
-                books_found[book] = info
-        for book, info in books_found.items():
-            print(f"{book[0]} by {book[1]} published by {info[0]} in {info[1]} found in {'; '.join(info[2])}.") 
-        if len(books_found) == 0:
-            print(not_found)
+        find_book(books,read_book_key())
     elif command == "list all":
-        list_type = input("Simple(title, author and number of copies) or detailed list? ")
-        number_of_books = 0
-        if list_type.lower() == "simple":
-            for book,info in books.items():
-                number_of_books += len(info[2])
-                print(f"{book[0]} by {book[1]} ({len(info[2])})") 
-        elif list_type.lower() == "detailed":
-            for book,info in books.items():
-                number_of_books += len(info[2])
-                print(f"{book[0]} by {book[1]} Publisher: {info[0]} Year: {info[1]} Found in: {', '.join(info[2])}") 
-        else:
-            print("Invalid command!")
-            command = input(main_prompt)
-            continue
-        print(f"You have {number_of_books} books of wich {len(books)} are unique.")
+        print_all(books)
     else:
         print("Invalid command!")
         
